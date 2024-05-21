@@ -96,7 +96,7 @@
 
 int tempo = 180;
 int buzzer = 56;
-
+int bestScore = 0;
 int melody[] = {
 
   // Nokia Ringtone 
@@ -197,7 +197,6 @@ void loop() {
   int jumpVal = digitalRead(butonjump);
   int xVal = analogRead(varXPin);
   int yVal = analogRead(varYPin);
-  // Serial.println(bVal);
   if (bVal == 1 && snake.head[2] != 0) {
     snake.dir[2] = -1;
   } else if(jumpVal == 1 && snake.head[2] != 2) {
@@ -221,9 +220,7 @@ void loop() {
   }
 
   if(timer > 1000/updateRate){
-    test(xVal,yVal);
-    
-    // Serial.println("AAAAAAAAAA");
+    score(xVal,yVal);
     timer = 0;
     Update();
   }
@@ -311,12 +308,15 @@ void printit() {
     }
 }
 
-void test(int xVal, int yVal) {
+void score(int xVal, int yVal) {
 
   lcd.setCursor(0,0);
   lcd.print("score = " + String(score));
   lcd.setCursor(0,1);
-  lcd.print("best is " + String(0));
+  if (bestScore > score) {
+    bestScore = score;
+  }
+  lcd.print("best is " + String(bestScore));
 }
 
 void printleds() {
