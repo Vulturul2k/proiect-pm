@@ -220,7 +220,7 @@ void loop() {
   }
 
   if(timer > 1000/updateRate){
-    score(xVal,yVal);
+    scoreFunc(xVal,yVal);
     timer = 0;
     Update();
   }
@@ -251,7 +251,7 @@ void Update(){
   }
   
    for(j=0;j<snake.len;j++){
-    if(snake.body[j][0] == newHead[0] && snake.body[j][1] == newHead[1] && snake.body[j][2] == newHead[2]){
+    if (snake.body[j][0] == newHead[0] && snake.body[j][1] == newHead[1] && snake.body[j][2] == newHead[2]) {
       song();
       delay(1000);
       snake = {{1,0,2},{{0,0,2}, {1,0,2}}, 2, {1,0,0}};
@@ -261,6 +261,7 @@ void Update(){
         }
       ledBool[apple.pos0+4*apple.pos1+16*apple.pos2] = true;
       turnLeds();
+      lcd.begin(16,2);
       score = 0;
       return;
     }
@@ -274,6 +275,7 @@ void Update(){
     apple.pos2 = (int)random(0,3);
     ledBool[apple.pos0+4*apple.pos1+16*apple.pos2] = true;
   }else{
+    ledBool[apple.pos0+4*apple.pos1+16*apple.pos2] = true;
     removeFirst();
   }
   
@@ -308,18 +310,19 @@ void printit() {
     }
 }
 
-void score(int xVal, int yVal) {
+void scoreFunc(int xVal, int yVal) {
 
   lcd.setCursor(0,0);
   lcd.print("score = " + String(score));
-  lcd.setCursor(0,1);
-  if (bestScore > score) {
+  if (bestScore < score) {
     bestScore = score;
   }
+  lcd.setCursor(0,1);
   lcd.print("best is " + String(bestScore));
 }
 
 void printleds() {
+  // functie folosita pentru a testa hardware-ul
   int i;
   int j;
   int k;
@@ -335,6 +338,7 @@ void printleds() {
 }
 
 void turnLeds() {
+  // functia care aprinde led-urile
   for (i = 0; i<48;i++){
     if(ledBool[i] == true) {
       digitalWrite(leds[i], HIGH);
@@ -345,6 +349,7 @@ void turnLeds() {
 }
 
 void song() {
+  // functia preluata pentru a simula ringtone-ul nokia
   for (int thisNote = 0; thisNote < notes * 2; thisNote = thisNote + 2) {
 
     divider = melody[thisNote + 1];
